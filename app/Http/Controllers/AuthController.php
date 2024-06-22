@@ -28,18 +28,18 @@ class AuthController extends Controller
             ]);
         } catch (ValidationException $e) {
             // Handle validation errors
-            return response()->json(['error' => 'Моля, попълни празните полета.']);
+            return response()->json(['error' => 'Моля, попълни празните полета.'], 400);
         }
 
 
         $user = User::where('email', $request->input('email'))->first();
 
         if (!$user) {
-            return response()->json(['error' => 'Потребител с този имейл не съществува.']);
+            return response()->json(['error' => 'Потребител с този имейл не съществува.'], 400);
         }
 
         if (!Hash::check($request->input('password'), $user->password)) {
-            return response()->json(['error' => 'Грешна парола.']);
+            return response()->json(['error' => 'Грешна парола.'], 400);
         }
 
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser($user);
 
 
-        return response()->json(['account' => [
+        return response()->json(['user' => [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
