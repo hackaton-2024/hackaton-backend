@@ -2,8 +2,10 @@
 
 
 //use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AIController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,3 +25,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('login', [AuthController::class, 'login']);
+
+Route::group(['middleware' => 'auth.jwt'], function () {
+    Route::get('user', [AuthController::class, 'getAuthenticated']);
+    Route::get('chat', [AIController::class, 'askForHelp']);
+});
+
+

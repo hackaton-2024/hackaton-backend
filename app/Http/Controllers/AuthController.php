@@ -11,6 +11,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    private function revokeExistingTokens($user)
+    {
+        $existing_tokens = $user->tokens();
+
+        foreach ($existing_tokens as $token) {
+            $token->revoke();
+        }
+    }
     public function login(Request $request)
     {
         try {
@@ -35,6 +43,7 @@ class AuthController extends Controller
         }
 
 
+        $this->revokeExistingTokens($user);
 
         $token = JWTAuth::fromUser($user);
 
@@ -45,5 +54,14 @@ class AuthController extends Controller
             'email' => $user->email,
 
         ], 'accessToken' => $token]);
+    }
+
+    public function getAuthenticated()
+    {
+        if(auth()->user()) {
+            return response()->json(auth()->user());
+        } else {
+            return response()->json('Не сте авторизирани', 400);
+        }
     }
 }

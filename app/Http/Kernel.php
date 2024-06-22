@@ -23,6 +23,11 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
+    protected $routeMiddleware = [
+        // Other middleware
+        'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+    ];
+
     /**
      * The application's route middleware groups.
      *
